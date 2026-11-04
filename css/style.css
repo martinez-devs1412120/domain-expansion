@@ -161,6 +161,7 @@ kbd{background:#241631;border:1px solid #4a2b66;border-bottom-width:3px;border-r
   width:100%;height:100%;object-fit:cover;
   object-position:var(--pos,50% 50%);
   transform:scale(var(--zoom,1)) translateY(var(--py,0px));
+  transform-origin:var(--org,50% 50%);
   will-change:transform;
   transition:filter .25s;
 }

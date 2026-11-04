@@ -183,7 +183,7 @@
     { src: 'assets/img/villain.jpg',          pos: [[50, 20], [50, 45], [50, 70]],  zoom: [1.15, 1.6] },
     { src: 'assets/img/villain-2.jpg',        pos: [[50, 20], [50, 45], [50, 70]],  zoom: [1.15, 1.6] },
   ];
-  const SFX = ['ZAP!!', 'KRA-KOOM!!', 'DOOOM!!', 'RAAAH!!', 'VWOOM!!', 'GOGOGO', 'SHUDAN!!', 'DOKAA!!', 'BZZT!!', 'GUROGURO...'];
+  const SFX = ['ZAP!!', 'KRA-KOOM!!', 'DOOOM!!', 'RAAAH!!', 'VWOOM!!', 'GOGOGO', 'SHUDAN!!', 'DOKAA!!', 'BZZT!!', 'GUROGURO...', 'TRA-KOOM!!', 'DORU-GAH!!', 'SECOND DRAFT!!', 'STATIC RISE!!'];
   const NARR = [
     'THE WAREHOUSE — 11:47 PM',
     'MEANWHILE, ABOVE THE CITY…',
@@ -193,6 +193,10 @@
     'THE CURSE LAUGHS LAST… FOR NOW.',
     'TWO HEARTBEATS. ONE HANDSIGN.',
     'THE INK IS STILL DRYING.',
+    'ROUND TWO. NO MERCY.',
+    'PAGE 144 — WRITTEN.',
+    'TWELVE HOURS EARLIER…',
+    'THE STATIC RISES.',
   ];
   const BUB = [
     'You should have stayed at your desk.',
@@ -203,6 +207,10 @@
     'You brought a curse. We brought a STORY.',
     'Together, then.',
     'Write your last word.',
+    'Then throw FASTER!',
+    'WHERE IS YOUR DOMAIN NOW?',
+    'The page is WRITTEN.',
+    'SEQUELS SELL.',
   ];
   const SFX_CLASS = ['sfx-pink', 'sfx-cyan', 'sfx-white'];
   const SFX_SPOT  = ['s1', 's2', 's3'];
