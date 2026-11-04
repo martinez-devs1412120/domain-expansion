@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOMAIN EXPANSION — Interactive Webtoon by PRATAO</title>
+<meta name="description" content="DOMAIN EXPANSION — an interactive manga webtoon. Two brothers, one curse, and a domain built from unfinished pages. Scroll to read.">
+<meta property="og:title" content="DOMAIN EXPANSION — Interactive Webtoon">
+<meta property="og:description" content="Two brothers. One dream. Zero mercy. An interactive manga you can scroll, tap and unleash.">
+<meta property="og:image" content="assets/img/domain-anime.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Kalam:wght@400;700&family=Oswald:wght@500;700&family=Noto+Sans+JP:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== TICKER ===== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <span>⚡ DOMAIN EXPANSION — 領域展開 — CHAPTER 3 OUT NOW — TAP PANELS TO UNLEASH — ⚡ DOMAIN EXPANSION — 領域展開 — CHAPTER 3 OUT NOW — TAP PANELS TO UNLEASH — </span>
+    <span>⚡ DOMAIN EXPANSION — 領域展開 — CHAPTER 3 OUT NOW — TAP PANELS TO UNLEASH — ⚡ DOMAIN EXPANSION — 領域展開 — CHAPTER 3 OUT NOW — TAP PANELS TO UNLEASH — </span>
+  </div>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <a class="nav__logo" href="#cover">
+    <span class="nav__mark">DE</span>
+    <span class="nav__title">DOMAIN<em>EXPANSION</em></span>
+  </a>
+  <div class="nav__links">
+    <a href="#ch1">CH.1</a>
+    <a href="#ch2">CH.2</a>
+    <a href="#ch3">CH.3</a>
+    <a href="#lab">LAB</a>
+  </div>
+  <div class="nav__actions">
+    <button id="soundBtn" class="btn btn--ghost" title="Toggle sound (S)"><span id="soundIcon">🔇</span></button>
+    <button id="domainBtn" class="btn btn--domain">DOMAIN EXPANSION ⚡</button>
+  </div>
+  <div class="progress"><div id="progressBar" class="progress__bar"></div></div>
+</nav>
+
+<!-- ===== COVER ===== -->
+<header id="cover" class="cover">
+  <div class="cover__burst" aria-hidden="true"></div>
+  <div class="cover__inner">
+    <div class="cover__art" data-reveal>
+      <img src="assets/img/domain-anime.jpg" alt="Three sorcerers shouting DOMAIN EXPANSION" class="cover__img">
+      <span class="cover__kanji" aria-hidden="true">領域展開</span>
+    </div>
+    <div class="cover__text">
+      <p class="cover__kicker" data-reveal style="--d:.05s">SCROLL · TAP · UNLEASH</p>
+      <h1 class="cover__title" data-reveal style="--d:.12s">
+        <span class="t1">DOMAIN</span>
+        <span class="t2">EXPANSION</span>
+      </h1>
+      <p class="cover__byline" data-reveal style="--d:.22s">STORY &amp; ART — <b>PRATAO</b> · AN INTERACTIVE WEBTOON</p>
+      <div class="cover__cta" data-reveal style="--d:.3s">
+        <a href="#ch1" class="btn btn--big">START READING ↓</a>
+        <button class="btn btn--big btn--domain js-domain">DOMAIN EXPANSION ⚡</button>
+      </div>
+      <p class="cover__hint" data-reveal style="--d:.4s">TIP: every panel reacts when you tap it.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ CHAPTER 1 ============ -->
+<section id="ch1" class="chapter">
+  <header class="chapter-card" data-reveal>
+    <div class="cc-num">CHAPTER 01</div>
+    <h2 class="cc-title">THE MAN WHO CRIED LIGHTNING</h2>
+    <p class="cc-sub">領域展開 — 前編 · PART ONE</p>
+  </header>
+
+  <div class="page">
+
+    <!-- P01 : desk tears (top crop) -->
+    <figure class="panel r-34" data-no="01" data-reveal data-sfx="SHHK!" style="--tilt:-.4deg">
+      <img class="art" src="assets/img/desk-tears-3.jpg" alt="A man in a suit crying, hands joined in a sign" style="--pos:50% 12%; --zoom:1.25" loading="lazy">
+      <div class="narration n-tl" style="--d:.5s">Every legend begins in silence.<br>His began in <b>tears</b>.</div>
+      <div class="bubble b-br" style="--d:.8s">One more page… I just need <b>one more page</b>.</div>
+      <span class="tag">PANEL 01</span>
+    </figure>
+
+    <!-- P02 : villain vs hero split -->
+    <div class="row">
+      <figure class="panel r-45" data-no="02" data-reveal style="--tilt:.6deg">
+        <img class="art" src="assets/img/villain.jpg" alt="The striped-shirt curse glaring" style="--pos:50% 28%; --zoom:1.35" loading="lazy">
+        <div class="bubble b-tc sm" style="--d:.45s">Pratao.<br>Your story <b>ends</b> here.</div>
+        <span class="tag">PANEL 02</span>
+      </figure>
+      <figure class="panel r-45" data-no="03" data-reveal style="--tilt:-.5deg; --d:.12s">
+        <img class="art" src="assets/img/desk-tears-2.jpg" alt="The hero's tearful face" style="--pos:50% 14%; --zoom:1.45" loading="lazy">
+        <div class="bubble b-bc sm" style="--d:.7s">Not before<br>the ink <b>dries</b>.</div>
+        <span class="tag">PANEL 03</span>
+      </figure>
+    </div>
+
+    <!-- P04 : pure CSS SFX panel (generated, no photo) -->
+    <figure class="panel panel--sfx" data-no="04" data-reveal data-sfx="KRA-KOOM!!" style="--tilt:.4deg">
+      <div class="speedlines" aria-hidden="true"></div>
+      <div class="narration n-tl" style="--d:.5s">THE WAREHOUSE — 11:47 PM</div>
+      <div class="giant-sfx gs-pink" style="--d:.35s">KRA-<br>KOOM!!</div>
+      <div class="bubble b-bc sm" style="--d:.9s">The whole block heard it.</div>
+      <span class="tag">PANEL 04</span>
+    </figure>
+
+    <!-- P05 : warehouse fight -->
+    <figure class="panel r-916" data-no="05" data-reveal data-sfx="ZAP!!" style="--tilt:-.3deg">
+      <img class="art" src="assets/img/warehouse-fight.jpg" alt="Lightning clash inside an abandoned warehouse" style="--pos:50% 45%; --zoom:1.12" loading="lazy">
+      <div class="sfx sfx-cyan s1" style="--d:.45s">ZAP!!</div>
+      <div class="sfx sfx-white s2" style="--d:.65s">DODODODO!</div>
+      <div class="bubble b-tl" style="--d:.85s">Stay behind me!</div>
+      <div class="bubble b-br" style="--d:1.05s">Lightning Style — <b>FIRST DRAFT!</b></div>
+      <span class="tag">PANEL 05</span>
+    </figure>
+
+  </div>
+</section>
+
+<!-- ============ CHAPTER 2 ============ -->
+<section id="ch2" class="chapter chapter--alt">
+  <header class="chapter-card" data-reveal>
+    <div class="cc-num">CHAPTER 02</div>
+    <h2 class="cc-title">2 VS 1: THE CLASH</h2>
+    <p class="cc-sub">領域展開 — 中編 · PART TWO</p>
+  </header>
+
+  <div class="page">
+
+    <!-- P06 : three faces strip -->
+    <figure class="panel r-21" data-no="06" data-reveal data-sfx="GOGOGO" style="--tilt:.3deg">
+      <img class="art" src="assets/img/clash-2v1.jpg" alt="2 VS 1: THE CLASH — three faces before battle" style="--pos:50% 18%; --zoom:1.7" loading="lazy">
+      <div class="narration n-bl" style="--d:.5s">Two brothers. One dream. <b>Zero mercy.</b></div>
+      <span class="tag">PANEL 06</span>
+    </figure>
+
+    <!-- P07 : B/W manga fight -->
+    <figure class="panel r-34" data-no="07" data-reveal data-sfx="DOOOM!!" style="--tilt:-.4deg">
+      <img class="art" src="assets/img/clash-bw.jpg" alt="Black and white manga battle page" style="--pos:50% 40%; --zoom:1.05" loading="lazy">
+      <div class="sfx sfx-pink s1" style="--d:.45s">DOOOM!</div>
+      <div class="sfx sfx-white s3" style="--d:.7s">KRASH!!</div>
+      <div class="bubble b-tl" style="--d:.9s">He's too fast—!</div>
+      <span class="tag">PANEL 07</span>
+    </figure>
+
+    <!-- P08 : dialogue-only halftone panel (generated) -->
+    <figure class="panel panel--talk" data-no="08" data-reveal style="--tilt:.35deg">
+      <div class="halftone" aria-hidden="true"></div>
+      <div class="talk__kanji" aria-hidden="true">対決</div>
+      <div class="bubble b-tl" style="--d:.4s">You fight like men who have something to lose.</div>
+      <div class="bubble b-br" style="--d:.8s">We do. That's why we <b>can't</b> lose.</div>
+      <span class="tag">PANEL 08</span>
+    </figure>
+
+    <!-- P09 : split realism + color -->
+    <div class="row">
+      <figure class="panel r-45" data-no="09" data-reveal data-sfx="VWOOM!!" style="--tilt:-.5deg">
+        <img class="art" src="assets/img/warehouse-fight.jpg" alt="Lightning blast against the curse" style="--pos:24% 55%; --zoom:1.45" loading="lazy">
+        <div class="sfx sfx-cyan s1 sm-sfx" style="--d:.5s">ZAP!!</div>
+        <div class="bubble b-tc sm" style="--d:.75s">Now, Kaito!</div>
+        <span class="tag">PANEL 09</span>
+      </figure>
+      <figure class="panel r-45" data-no="10" data-reveal style="--tilt:.5deg; --d:.12s">
+        <img class="art" src="assets/img/clash-bw-color.jpg" alt="The curse screams as the brothers attack" style="--pos:74% 42%; --zoom:1.45" loading="lazy">
+        <div class="sfx sfx-pink s2 sm-sfx" style="--d:.55s">RAAAH!</div>
+        <div class="bubble b-bc sm" style="--d:.85s">IMPOSSIBLE—</div>
+        <span class="tag">PANEL 10</span>
+      </figure>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ CHAPTER 3 ============ -->
+<section id="ch3" class="chapter">
+  <header class="chapter-card" data-reveal>
+    <div class="cc-num">CHAPTER 03</div>
+    <h2 class="cc-title">DOMAIN EXPANSION</h2>
+    <p class="cc-sub">領域展開 — 後編 · FINAL PART</p>
+  </header>
+
+  <div class="page">
+
+    <!-- P11 : whisper before the domain -->
+    <figure class="panel r-916" data-no="11" data-reveal data-sfx="VMMMM..." style="--tilt:.3deg">
+      <img class="art" src="assets/img/domain-anime.jpg" alt="The suit sorcerer closes his hands, energy rising" style="--pos:50% 32%; --zoom:1.18" loading="lazy">
+      <div class="bubble b-tl whisper" style="--d:.5s">Domain<br>Expansion…</div>
+      <span class="tag">PANEL 11</span>
+    </figure>
+
+    <!-- P12 : the grid — tap to trigger overlay -->
+    <figure class="panel r-11" data-no="12" data-reveal data-domain data-sfx="領域展開!!" style="--tilt:-.4deg">
+      <img class="art" src="assets/img/domain-anime-grid.png" alt="Three sorcerers shout DOMAIN EXPANSION" style="--pos:50% 50%; --zoom:1" loading="lazy">
+      <div class="sfx sfx-pink s1" style="--d:.45s">DOMAIN<br>EXPANSION!!</div>
+      <div class="tap-hint" style="--d:1s">👆 TAP THE PANEL</div>
+      <span class="tag">PANEL 12</span>
+    </figure>
+
+    <!-- P13 : realism domain -->
+    <figure class="panel r-916" data-no="13" data-reveal data-domain data-sfx="領域展開!!" style="--tilt:.35deg">
+      <img class="art" src="assets/img/domain-realism.jpg" alt="Realistic domain expansion panel with two screaming curses" style="--pos:50% 38%; --zoom:1.15" loading="lazy">
+      <div class="narration n-tl" style="--d:.5s">Inside the domain,<br>the only rule is <b>the author's</b>.</div>
+      <div class="bubble b-br" style="--d:.85s">This is my world now. And in my world…</div>
+      <span class="tag">PANEL 13</span>
+    </figure>
+
+    <!-- P14 : full-bleed impact panel (generated) -->
+    <figure class="panel panel--impact" data-no="14" data-reveal data-domain data-sfx="THE UNFINISHED PAGE" style="--tilt:0deg">
+      <div class="speedlines speedlines--cyan" aria-hidden="true"></div>
+      <div class="impact__small">DOMAIN NAME —</div>
+      <div class="impact__big">THE UNFINISHED<br>PAGE</div>
+      <div class="impact__line">FINISH. THE. STORY.</div>
+      <span class="tag">PANEL 14</span>
+    </figure>
+
+    <!-- P15 : tears resolve -->
+    <figure class="panel r-34" data-no="15" data-reveal data-sfx="SHHH..." style="--tilt:-.3deg">
+      <img class="art" src="assets/img/desk-tears-2.jpg" alt="The hero cries as the domain fades" style="--pos:50% 20%; --zoom:1.28" loading="lazy">
+      <div class="bubble b-tc" style="--d:.5s">We finish it <b>together</b>.</div>
+      <div class="narration n-bl" style="--d:.9s">The tears never stopped.<br>That was the point.</div>
+      <span class="tag">PANEL 15</span>
+    </figure>
+
+    <!-- P16 : ending -->
+    <figure class="panel r-916 panel--end" data-no="16" data-reveal style="--tilt:0deg">
+      <img class="art" src="assets/img/desk-tears-1.jpg" alt="Back at the desk, pen waiting" style="--pos:50% 82%; --zoom:1.35" loading="lazy">
+      <div class="end-stamp" style="--d:.7s">TO BE CONTINUED</div>
+      <div class="bubble b-br sm" style="--d:.4s">Chapter 4 — when the pen moves again.</div>
+      <span class="tag">PANEL 16</span>
+    </figure>
+
+    <div class="next-ch" data-reveal>
+      <button class="btn btn--big btn--domain js-domain">RE-UNLEASH THE DOMAIN ⚡</button>
+      <a class="btn btn--big" href="#lab">OR FORGE NEW PANELS →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PANEL LAB ============ -->
+<section id="lab" class="chapter chapter--lab">
+  <header class="chapter-card" data-reveal>
+    <div class="cc-num">BONUS</div>
+    <h2 class="cc-title">PANEL LAB</h2>
+    <p class="cc-sub">INFINITE PANELS — GENERATED LIVE, NO INK WASTED</p>
+  </header>
+
+  <div class="page">
+    <div class="lab__stage" data-reveal>
+      <figure class="panel r-34" id="labPanel" data-no="??" data-sfx="ZAP!!" style="--tilt:.3deg">
+        <img class="art" id="labArt" src="assets/img/clash-2v1.jpg" alt="Generated panel">
+        <div class="sfx sfx-pink s1" id="labSfx">ZAP!!</div>
+        <div class="bubble b-tl" id="labBubble">Click GENERATE!</div>
+        <div class="narration n-tl" id="labNarr">PANEL #0000</div>
+        <span class="tag">LAB PANEL</span>
+      </figure>
+      <div class="lab__controls">
+        <button id="genBtn" class="btn btn--big btn--domain">⚡ GENERATE PANEL</button>
+        <button id="genReset" class="btn btn--ghost">RESET SEED</button>
+        <p class="lab__seed">SEED: <b id="labSeed">0000</b> — same seed, same panel. Share it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="ticker ticker--footer" aria-hidden="true">
+    <div class="ticker__track">
+      <span>STORY &amp; ART — PRATAO · INTERACTIVE EDITION · TAP EVERYTHING · 領域展開 · STORY &amp; ART — PRATAO · INTERACTIVE EDITION · TAP EVERYTHING · 領域展開 · </span>
+      <span>STORY &amp; ART — PRATAO · INTERACTIVE EDITION · TAP EVERYTHING · 領域展開 · STORY &amp; ART — PRATAO · INTERACTIVE EDITION · TAP EVERYTHING · 領域展開 · </span>
+    </div>
+  </div>
+  <div class="footer__body">
+    <p><b>DOMAIN EXPANSION</b> — fan-style interactive webtoon built from the PRATAO art drops.</p>
+    <p class="footer__hint">SHORTCUTS: <kbd>D</kbd> domain · <kbd>S</kbd> sound · tap any panel for impact.</p>
+    <p class="footer__deploy">LIVE DEMO — GitHub Pages · <span id="ghUser">your-username</span>.github.io</p>
+  </div>
+</footer>
+
+<!-- ===== DOMAIN OVERLAY ===== -->
+<div id="domainOverlay" class="overlay" aria-hidden="true">
+  <div class="overlay__burst"></div>
+  <div class="overlay__rings"></div>
+  <div class="overlay__kanji">領域展開</div>
+  <div class="overlay__title">DOMAIN<br>EXPANSION</div>
+  <div class="overlay__name">THE UNFINISHED PAGE</div>
+  <div class="overlay__close">CLICK TO ESCAPE THE DOMAIN</div>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
