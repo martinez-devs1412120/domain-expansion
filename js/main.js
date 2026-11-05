@@ -66,7 +66,7 @@
     src.start(t);
   }
   const sfxThump  = () => { tone({ type: 'sine', from: 110, to: 38, dur: .24, vol: .34 }); noise({ dur: .1, vol: .08, hp: 60 }); };
-  const sfxWhoosh = () => noise({ dur: .22, vol: .07, hp: 1600, sweepTo: 250 });
+  const sfxWhoosh = (hp = 1600) => noise({ dur: .2, vol: .06, hp, sweepTo: 260 });
   const sfxZap    = () => { tone({ type: 'sawtooth', from: 900, to: 120, dur: .15, vol: .12 }); noise({ dur: .12, vol: .1, hp: 1200 }); };
   const sfxRiser  = () => {
     tone({ type: 'sawtooth', from: 70, to: 520, dur: .6, vol: .06 });
@@ -132,7 +132,10 @@
     sessionStorage.setItem('de_intro', '1');
   } else {
     document.documentElement.classList.add('intro-lock');
-    requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('reveal')));
+    // reveal via rAF when possible, timer fallback if rAF is throttled (background tab)
+    const showIntro = () => intro.classList.add('reveal');
+    requestAnimationFrame(() => requestAnimationFrame(showIntro));
+    setTimeout(showIntro, 400);
     intro.addEventListener('click', enterIntro, { once: true });
   }
 
@@ -201,6 +204,21 @@
   }, { threshold: .18, rootMargin: '0px 0px -6% 0px' });
   $$('[data-reveal]').forEach(el => io.observe(el));
 
+  /* panel-enter sounds — repeatable in BOTH scroll directions, rate-limited,
+     so scrolling up sounds the same as scrolling down */
+  let lastEnter = 0;
+  const enterIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const now = performance.now();
+      if (now - lastEnter > 150) {
+        lastEnter = now;
+        sfxWhoosh(1200 + Math.random() * 900);
+      }
+    });
+  }, { threshold: .3, rootMargin: '0px 0px -8% 0px' });
+  $$('.panel').forEach(p => enterIO.observe(p));
+
   /* ---------------- CHAPTER RAIL + ACTIVE NAV ---------------- */
   const SECTIONS = [['ch1','CH.1'],['ch2','CH.2'],['ch3','CH.3'],['ch4','CH.4'],['ch5','CH.5'],['ch6','CH.6'],['lab','LAB']];
   const rail = $('#rail');
@@ -249,27 +267,30 @@
         }
 
         if (!reduced) {
-          // cinematic zoom on flagged panels
+          // pass 1 — read all geometry first (avoids layout thrashing)
+          const cineOps = [], artOps = [], kanjiOps = [];
           for (const { img, cz } of cine) {
             const r = img.parentElement.getBoundingClientRect();
             if (r.bottom < 0 || r.top > vh) continue;
             const prog = clamp(1 - (r.top + r.height) / (vh + r.height), 0, 1);
-            img.style.setProperty('--czs', (1 + cz * prog).toFixed(3));
+            cineOps.push([img, (1 + cz * prog).toFixed(3)]);
           }
-          // art parallax
           for (const img of arts) {
             const r = img.parentElement.getBoundingClientRect();
             if (r.bottom < -80 || r.top > vh + 80) continue;
             const prog = (vh / 2 - (r.top + r.height / 2)) / vh;
-            img.style.setProperty('--py', (prog * r.height * .09).toFixed(1) + 'px');
+            artOps.push([img, (prog * r.height * .09).toFixed(1) + 'px']);
           }
-          // chapter kanji drifts against scroll
           for (const k of kanjis) {
             const r = k.parentElement.getBoundingClientRect();
             if (r.bottom < 0 || r.top > vh) continue;
             const prog = (vh / 2 - (r.top + r.height / 2)) / vh;
-            k.style.transform = `translate(-50%,-52%) translateY(${(prog * -70).toFixed(1)}px)`;
+            kanjiOps.push([k, `translate(-50%,-52%) translateY(${(prog * -70).toFixed(1)}px)`]);
           }
+          // pass 2 — write styles
+          for (const [el, v] of cineOps) el.style.setProperty('--czs', v);
+          for (const [el, v] of artOps) el.style.setProperty('--py', v);
+          for (const [el, v] of kanjiOps) el.style.transform = v;
         }
       } finally {
         ticking = false; // never brick the scroll pipeline
