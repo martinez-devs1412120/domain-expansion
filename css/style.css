@@ -160,7 +160,7 @@ kbd{background:#241631;border:1px solid #4a2b66;border-bottom-width:3px;border-r
 .panel .art{
   width:100%;height:100%;object-fit:cover;
   object-position:var(--pos,50% 50%);
-  transform:scale(var(--zoom,1)) translateY(var(--py,0px));
+  transform:scale(calc(var(--zoom,1) * var(--czs,1))) translateY(var(--py,0px));
   transform-origin:var(--org,50% 50%);
   will-change:transform;
   transition:filter .25s;
@@ -182,11 +182,22 @@ kbd{background:#241631;border:1px solid #4a2b66;border-bottom-width:3px;border-r
   background:var(--ink);color:#c9b3e8;padding:5px 10px;border-right:2px solid var(--frame);border-bottom:2px solid var(--frame);
 }
 
-/* reveal animation */
-[data-reveal]{opacity:0;transform:translateY(46px) scale(.965) rotate(var(--tilt,0deg))}
+/* reveal animation — directional variants */
+[data-reveal]{--ax:0px;--ay:46px;--as:.965;opacity:0;transform:translate(var(--ax),var(--ay)) scale(var(--as)) rotate(var(--tilt,0deg))}
 [data-reveal].in{
-  opacity:1;transform:translateY(0) scale(1) rotate(var(--tilt,0deg));
-  transition:opacity .6s ease var(--d,0s), transform .7s cubic-bezier(.16,1.1,.3,1) var(--d,0s);
+  opacity:1;transform:translate(0,0) scale(1) rotate(var(--tilt,0deg));
+  transition:opacity .55s ease var(--d,0s), transform .75s cubic-bezier(.16,1.1,.3,1) var(--d,0s), clip-path .8s cubic-bezier(.65,0,.25,1) var(--d,0s);
+}
+[data-anim="left"]{--ax:-64px;--ay:18px;--as:.96}
+[data-anim="right"]{--ax:64px;--ay:18px;--as:.96}
+[data-anim="drop"]{--ax:0px;--ay:-52px;--as:.97}
+[data-anim="zoom"]{--ax:0px;--ay:0px;--as:1.14}
+/* wipe runs as a keyframe animation on .in — a fully-clipped base state
+   would never report an intersection, so the element stays unclipped here */
+[data-anim="wipe"].in{animation:wipeIn .8s cubic-bezier(.65,0,.25,1) var(--d,0s) both}
+@keyframes wipeIn{
+  from{clip-path:inset(-40px 101% -40px -40px)}
+  to{clip-path:inset(-40px -40px -40px -40px)}
 }
 /* keep panel tilt while sliding: figure children use their own --d */
 
@@ -456,11 +467,138 @@ kbd{background:#241631;border:1px solid #4a2b66;border-bottom-width:3px;border-r
   .r-21{aspect-ratio:1.5/1}
 }
 
+/* ============ INTRO CUT-IN ============ */
+html.intro-lock, html.intro-lock body{overflow:hidden}
+.intro{
+  position:fixed;inset:0;z-index:500;display:grid;place-content:center;text-align:center;
+  cursor:pointer;background:radial-gradient(circle at 50% 45%, #1d0b30 0%, #0b0512 55%, #000 100%);
+  transition:transform .6s cubic-bezier(.75,0,.2,1);
+}
+.intro.lift{transform:translateY(-103%)}
+.intro__burst{
+  position:absolute;inset:-60%;opacity:0;transition:opacity .5s;
+  background:repeating-conic-gradient(from 0deg at 50% 50%,
+    rgba(255,45,120,.16) 0deg 3deg, transparent 3deg 10deg);
+  animation:spin 10s linear infinite;
+}
+.intro.reveal .intro__burst{opacity:1}
+.intro__kanji{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  writing-mode:vertical-rl;font-family:'Noto Sans JP',sans-serif;font-weight:900;
+  font-size:clamp(60px,12vw,140px);letter-spacing:.25em;
+  color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.14);
+  opacity:0;transition:opacity .6s;
+}
+.intro.reveal .intro__kanji{opacity:1}
+.intro__title{
+  position:relative;z-index:2;font-family:'Bangers',cursive;
+  font-size:clamp(56px,11vw,130px);line-height:.86;letter-spacing:2px;
+  color:var(--frame);-webkit-text-stroke:2px rgba(0,0,0,.45);
+  filter:drop-shadow(8px 8px 0 rgba(0,0,0,.85));opacity:0;
+}
+.intro__title em{
+  display:block;font-style:normal;transform:rotate(-2deg);
+  background:linear-gradient(100deg,var(--pink) 15%,#fff 50%,var(--cyan) 85%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-stroke:2px rgba(0,0,0,.2);
+}
+.intro.reveal .intro__title{animation:slamIn .5s cubic-bezier(.2,1.5,.35,1) both .2s}
+@keyframes slamIn{
+  0%{opacity:0;transform:scale(2.6) rotate(-6deg)}
+  62%{opacity:1;transform:scale(.94) rotate(-1.4deg)}
+  100%{opacity:1;transform:scale(1) rotate(-1.4deg)}
+}
+.intro__press{
+  position:relative;z-index:2;margin-top:26px;
+  font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.4em;
+  font-size:clamp(11px,1.6vw,15px);color:#fff;opacity:0;
+}
+.intro.reveal .intro__press{animation:fadeIn .35s ease .85s both, pressBlink 1.7s ease-in-out 1.4s infinite}
+@keyframes pressBlink{0%,100%{opacity:1}50%{opacity:.35}}
+.intro__hint{
+  position:relative;z-index:2;margin-top:12px;
+  font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.3em;
+  font-size:10px;color:#8d76ad;opacity:0;
+}
+.intro.reveal .intro__hint{animation:fadeIn .4s ease 1.15s both}
+
+/* ============ SCREEN FLASH + QUAKE ============ */
+.flashfx{position:fixed;inset:0;z-index:450;pointer-events:none;background:#fff;opacity:0}
+.flashfx.go{animation:flashHit .18s ease-out}
+.flashfx.go2{animation:flashDouble .32s ease-out}
+@keyframes flashHit{from{opacity:var(--fo,.32)}to{opacity:0}}
+@keyframes flashDouble{
+  0%{opacity:calc(var(--fo,.32)*.8)}
+  35%{opacity:0}
+  55%{opacity:calc(var(--fo,.32)*.55)}
+  100%{opacity:0}
+}
+main.quake{animation:mainQuake .42s cubic-bezier(.36,.07,.19,.97)}
+@keyframes mainQuake{
+  10%,90%{transform:translate(-2px,1px)}
+  20%,80%{transform:translate(4px,-2px)}
+  30%,50%,70%{transform:translate(-6px,2px)}
+  40%,60%{transform:translate(6px,-1px)}
+}
+
+/* ============ CHAPTER DECOR — kanji + gogogo ============ */
+.chapter-card{position:relative}
+.cc-kanji{
+  position:absolute;left:50%;top:50%;z-index:0;
+  font-family:'Noto Sans JP',sans-serif;font-weight:900;
+  font-size:clamp(150px,26vw,320px);line-height:1;
+  color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.07);
+  pointer-events:none;user-select:none;will-change:transform;
+}
+.cc-num,.cc-title,.cc-sub{position:relative;z-index:1}
+.cc-gogo{
+  position:absolute;top:-16%;z-index:0;
+  writing-mode:vertical-rl;font-family:'Noto Sans JP',sans-serif;font-weight:900;
+  font-size:clamp(38px,6vw,78px);letter-spacing:.3em;
+  color:rgba(255,255,255,.055);pointer-events:none;user-select:none;
+  animation:gogoDrift 8s ease-in-out infinite alternate;
+}
+@keyframes gogoDrift{from{transform:translateY(36px)}to{transform:translateY(-36px)}}
+
+/* ============ CHAPTER RAIL ============ */
+.rail{
+  position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:90;
+  display:grid;gap:14px;
+}
+.rail button{
+  width:11px;height:11px;border-radius:50%;padding:0;cursor:pointer;position:relative;
+  border:2px solid rgba(255,255,255,.35);background:transparent;transition:.25s;
+}
+.rail button:hover{border-color:#fff}
+.rail button.on{
+  background:var(--pink);border-color:#fff;transform:scale(1.3);
+  box-shadow:0 0 14px var(--pink);
+}
+.rail button span{
+  position:absolute;right:24px;top:50%;translate:0 -50%;
+  font-family:'Oswald',sans-serif;font-weight:700;font-size:10px;letter-spacing:.18em;
+  color:#e9dcff;background:rgba(11,7,16,.92);border:1px solid rgba(255,255,255,.15);
+  padding:4px 9px;white-space:nowrap;opacity:0;pointer-events:none;transition:.2s;
+}
+.rail button:hover span,.rail button.on span{opacity:1}
+@media (max-width:1000px){.rail{display:none}}
+
+/* ============ ACTIVE NAV + POLISH ============ */
+.nav__links a.on{color:#fff;background:rgba(255,45,120,.28)}
+section.chapter{scroll-margin-top:76px}
+::-webkit-scrollbar{width:11px}
+::-webkit-scrollbar-track{background:#0b0710}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--pink),var(--purple));border:3px solid #0b0710;border-radius:8px}
+:focus-visible{outline:2px dashed var(--cyan);outline-offset:3px}
+@media (max-width:900px){.nav__links a{padding:7px 7px;font-size:11px;letter-spacing:.06em}}
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   html{scroll-behavior:auto}
-  [data-reveal]{opacity:1;transform:none}
+  [data-reveal],[data-reveal].in{opacity:1;transform:none;clip-path:none}
   .bubble,.sfx,.narration,.giant-sfx,.end-stamp{opacity:1;transform:none}
   .in .b-tc,.in .b-bc{transform:translateX(-50%)}
+  .intro,.flashfx,.cc-gogo{display:none}
+  .panel .art{transform:scale(var(--zoom,1)) !important;transform-origin:var(--org,50% 50%)}
 }

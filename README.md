@@ -60,12 +60,16 @@ If you have the GitHub CLI: `gh repo create domain-expansion --public --source=.
 
 | Feature | Where |
 |---|---|
-| Webtoon vertical scroll with panel reveals + parallax | all chapters |
+| Intro cut-in (click to enter, unlocks audio) | first load per session |
+| Webtoon scroll: directional panel reveals, wipes, parallax art, drifting kanji + ゴゴゴゴ | all chapters |
+| Cinematic zoom-on-scroll panels (eye close-up, domain panels) | flagged panels |
+| Chapter entry: screen flash + quake + thump | each chapter card |
 | Tappable panels → shake, flash, flying SFX, sound | every panel |
 | Full-screen DOMAIN EXPANSION cut-in | `D` key, nav button, domain panels |
-| Procedural sound (WebAudio, no audio files) | 🔊 toggle / `S` key |
+| Procedural sound engine (WebAudio, no audio files), on by default after intro | 🔊 toggle / `S` key, persisted |
+| Chapter rail (jump dots) + active nav sync | right edge, desktop |
 | Seeded **Panel Lab** generator (new panels + text, endlessly) | `#lab` |
-| Reading progress bar, chapter nav, to-be-continued stamp | top bar / ch.3 |
+| Reading progress bar, to-be-continued stamp, custom scrollbar | everywhere |
 | Reduced-motion support + lazy images + mobile responsive | everywhere |
 
 ## 🛠 Customizing the story

@@ -8,6 +8,7 @@
 <meta property="og:title" content="DOMAIN EXPANSION — Interactive Webtoon">
 <meta property="og:description" content="Two brothers. One dream. Zero mercy. An interactive manga you can scroll, tap and unleash.">
 <meta property="og:image" content="assets/img/domain-anime.jpg">
+<meta name="theme-color" content="#0b0710">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +16,16 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<!-- ===== INTRO CUT-IN ===== -->
+<div id="intro" class="intro" role="button" aria-label="Enter the site">
+  <div class="intro__burst" aria-hidden="true"></div>
+  <div class="intro__kanji" aria-hidden="true">領域展開</div>
+  <div class="intro__title" aria-hidden="true">DOMAIN<em>EXPANSION</em></div>
+  <div class="intro__press">CLICK TO ENTER THE DOMAIN</div>
+  <div class="intro__hint">🔊 SOUND ON — HEADPHONES RECOMMENDED</div>
+</div>
+<div id="flashfx" class="flashfx" aria-hidden="true"></div>
 
 <!-- ===== TICKER ===== -->
 <div class="ticker" aria-hidden="true">
@@ -45,6 +56,7 @@
   </div>
   <div class="progress"><div id="progressBar" class="progress__bar"></div></div>
 </nav>
+<aside id="rail" class="rail" aria-label="Chapters"></aside>
 
 <!-- ===== COVER ===== -->
 <header id="cover" class="cover">

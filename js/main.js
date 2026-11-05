@@ -1,10 +1,13 @@
 /* ============================================================
-   DOMAIN EXPANSION — interactive engine
+   DOMAIN EXPANSION — interactive engine v2
+   intro · directional reveals · screen flash & quake ·
+   cinematic zoom · chapter rail · procedural sound
    ============================================================ */
 (() => {
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
   /* ---------------- TOAST ---------------- */
   const toastEl = $('#toast');
@@ -16,88 +19,260 @@
     toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1600);
   };
 
-  /* ---------------- SOUND (procedural, no files) ---------------- */
-  let audioCtx = null;
+  /* ---------------- SOUND ENGINE (procedural, no files) ---------------- */
+  let ac = null, master = null;
   let soundOn = false;
-  const ac = () => (audioCtx ||= new (window.AudioContext || window.webkitAudioContext)());
+  const acGet = () => {
+    if (!ac) {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      master = ac.createGain();
+      master.gain.value = .75;
+      master.connect(ac.destination);
+    }
+    return ac;
+  };
+  // browsers suspend audio until a gesture — unlock on first interaction
+  addEventListener('pointerdown', () => { acGet().resume?.(); }, { once: true });
 
-  function tone({ type = 'sine', from = 200, to = 80, dur = .18, vol = .22, delay = 0 }) {
-    if (!soundOn) return;
-    const ctx = ac(), t = ctx.currentTime + delay;
-    const o = ctx.createOscillator(), g = ctx.createGain();
+  const canPlay = () => soundOn && ac && ac.state === 'running';
+
+  function tone({ type = 'sine', from = 200, to = 80, dur = .18, vol = .2, delay = 0 }) {
+    if (!canPlay()) return;
+    const c = acGet(), t = c.currentTime + delay;
+    const o = c.createOscillator(), g = c.createGain();
     o.type = type;
     o.frequency.setValueAtTime(from, t);
     o.frequency.exponentialRampToValueAtTime(Math.max(to, 1), t + dur);
     g.gain.setValueAtTime(vol, t);
     g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-    o.connect(g).connect(ctx.destination);
+    o.connect(g).connect(master);
     o.start(t); o.stop(t + dur + .02);
   }
-  function noise({ dur = .25, vol = .18, hp = 300, delay = 0 }) {
-    if (!soundOn) return;
-    const ctx = ac(), t = ctx.currentTime + delay;
-    const len = ctx.sampleRate * dur;
-    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  function noise({ dur = .25, vol = .15, hp = 300, sweepTo = null, delay = 0 }) {
+    if (!canPlay()) return;
+    const c = acGet(), t = c.currentTime + delay;
+    const len = Math.floor(c.sampleRate * dur);
+    const buf = c.createBuffer(1, len, c.sampleRate);
     const d = buf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
-    const src = ctx.createBufferSource(); src.buffer = buf;
-    const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = hp;
-    const g = ctx.createGain();
+    const src = c.createBufferSource(); src.buffer = buf;
+    const f = c.createBiquadFilter(); f.type = 'highpass';
+    f.frequency.setValueAtTime(hp, t);
+    if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur);
+    const g = c.createGain();
     g.gain.setValueAtTime(vol, t);
     g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-    src.connect(f).connect(g).connect(ctx.destination);
+    src.connect(f).connect(g).connect(master);
     src.start(t);
   }
-  const sfxThump = () => { tone({ type: 'sine', from: 120, to: 40, dur: .22, vol: .3 }); noise({ dur: .12, vol: .1, hp: 80 }); };
-  const sfxZap   = () => { tone({ type: 'sawtooth', from: 900, to: 120, dur: .16, vol: .14 }); noise({ dur: .14, vol: .12, hp: 900 }); };
-  const sfxWhoosh= () => { tone({ type: 'sine', from: 60, to: 500, dur: .5, vol: .12 }); noise({ dur: .5, vol: .06, hp: 200 }); };
-  const sfxDomain= () => {
-    tone({ type: 'sine', from: 40, to: 90, dur: .9, vol: .3 });
-    tone({ type: 'sawtooth', from: 200, to: 900, dur: .7, vol: .07, delay: .15 });
-    noise({ dur: .9, vol: .1, hp: 100, delay: .05 });
+  const sfxThump  = () => { tone({ type: 'sine', from: 110, to: 38, dur: .24, vol: .34 }); noise({ dur: .1, vol: .08, hp: 60 }); };
+  const sfxWhoosh = () => noise({ dur: .22, vol: .07, hp: 1600, sweepTo: 250 });
+  const sfxZap    = () => { tone({ type: 'sawtooth', from: 900, to: 120, dur: .15, vol: .12 }); noise({ dur: .12, vol: .1, hp: 1200 }); };
+  const sfxRiser  = () => {
+    tone({ type: 'sawtooth', from: 70, to: 520, dur: .6, vol: .06 });
+    tone({ type: 'sine', from: 40, to: 110, dur: .7, vol: .22, delay: .1 });
+    noise({ dur: .55, vol: .05, hp: 400, sweepTo: 3000 });
+  };
+  const sfxHit    = () => { noise({ dur: .14, vol: .16, hp: 900 }); tone({ type: 'sine', from: 1250, to: 600, dur: .12, vol: .1 }); };
+  const sfxTick   = () => tone({ type: 'square', from: 2600, to: 2100, dur: .035, vol: .045 });
+  const sfxDomain = () => {
+    tone({ type: 'sine', from: 38, to: 95, dur: 1, vol: .32 });
+    tone({ type: 'sawtooth', from: 180, to: 900, dur: .8, vol: .07, delay: .12 });
+    noise({ dur: 1, vol: .1, hp: 90, delay: .05 });
   };
 
   const soundBtn = $('#soundBtn'), soundIcon = $('#soundIcon');
-  function setSound(on) {
+  function setSound(on, silent = false) {
     soundOn = on;
     soundIcon.textContent = on ? '🔊' : '🔇';
-    toast(on ? 'SOUND ON ⚡' : 'SOUND OFF');
-    if (on) { ac().resume?.(); sfxZap(); }
+    localStorage.setItem('de_sound', on ? '1' : '0');
+    if (on) { acGet().resume?.(); if (!silent) toast('SOUND ON ⚡'); sfxZap(); }
   }
   soundBtn.addEventListener('click', () => setSound(!soundOn));
+  // restore preference without creating a context (no gesture yet)
+  soundOn = localStorage.getItem('de_sound') !== '0';
+  soundIcon.textContent = soundOn ? '🔊' : '🔇';
 
-  /* ---------------- REVEAL ON SCROLL ---------------- */
+  /* ---------------- SCREEN FLASH + QUAKE ---------------- */
+  const flashEl = $('#flashfx'), mainEl = $('main');
+  let lastFlash = 0;
+  function flash(a = .3, dbl = false) {
+    if (reduced) return;
+    const now = performance.now();
+    if (now - lastFlash < 300) return;   // never strobe
+    lastFlash = now;
+    flashEl.style.setProperty('--fo', a);
+    flashEl.classList.remove('go', 'go2');
+    void flashEl.offsetWidth;
+    flashEl.classList.add(dbl ? 'go2' : 'go');
+  }
+  function quake() {
+    if (reduced) return;
+    mainEl.classList.remove('quake');
+    void mainEl.offsetWidth;
+    mainEl.classList.add('quake');
+  }
+
+  /* ---------------- INTRO CUT-IN ---------------- */
+  const intro = $('#intro');
+  const seenIntro = sessionStorage.getItem('de_intro') === '1';
+  function enterIntro() {
+    if (!intro.parentNode) return;
+    intro.classList.add('lift');
+    document.documentElement.classList.remove('intro-lock');
+    sessionStorage.setItem('de_intro', '1');
+    const stored = localStorage.getItem('de_sound');
+    setSound(stored === '0' ? false : true, stored !== null); // gesture: audio unlocked
+    setTimeout(() => { flash(.3); sfxThump(); }, 200);
+    setTimeout(() => intro.remove(), 750);
+  }
+  if (reduced || seenIntro) {
+    intro?.remove();
+    document.documentElement.classList.remove('intro-lock');
+    sessionStorage.setItem('de_intro', '1');
+  } else {
+    document.documentElement.classList.add('intro-lock');
+    requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('reveal')));
+    intro.addEventListener('click', enterIntro, { once: true });
+  }
+
+  /* ---------------- CHAPTER DECOR (kanji / gogogo) ---------------- */
+  const KANJI = { ch1: '泣', ch2: '対', ch3: '領', ch4: '雷', ch5: '呪', ch6: '完' };
+  const GOGO  = { ch2: [8, 84], ch4: [88, 12], ch6: [10, 86] };
+  $$('.chapter-card').forEach(card => {
+    const sec = card.closest('section');
+    const id = sec && sec.id;
+    if (id && KANJI[id]) {
+      const k = document.createElement('span');
+      k.className = 'cc-kanji';
+      k.setAttribute('aria-hidden', 'true');
+      k.textContent = KANJI[id];
+      card.appendChild(k);
+    }
+    if (id && GOGO[id]) {
+      GOGO[id].forEach((x, i) => {
+        const g = document.createElement('span');
+        g.className = 'cc-gogo';
+        g.setAttribute('aria-hidden', 'true');
+        g.textContent = 'ゴゴゴゴ';
+        g.style.left = x + '%';
+        g.style.animationDelay = (i * .9) + 's';
+        card.appendChild(g);
+      });
+    }
+  });
+  const kanjis = $$('.cc-kanji');
+
+  /* ---------------- REVEAL (directional) ---------------- */
+  const ANIM = {
+    1:'wipe', 2:'left', 3:'right', 4:'wipe', 5:'zoom',
+    6:'zoom', 7:'wipe', 8:'up', 9:'left', 10:'right',
+    11:'left', 12:'zoom', 13:'right', 14:'wipe', 15:'drop', 16:'zoom',
+    17:'right', 18:'zoom', 19:'left', 20:'left', 21:'right',
+    22:'wipe', 23:'up', 24:'left', 25:'zoom', 26:'right', 27:'wipe',
+    28:'left', 29:'zoom', 30:'right', 31:'zoom', 32:'left', 33:'wipe', 34:'drop',
+  };
+  const CZ = { 12: .10, 13: .10, 30: .12, 31: .18 }; // cinematic zoom-on-scroll
+
+  $$('.panel').forEach(p => {
+    const n = +p.dataset.no;
+    if (ANIM[n]) p.setAttribute('data-anim', ANIM[n]);
+    if (CZ[n]) p.setAttribute('data-cz', CZ[n]);
+  });
+  const cine = $$('.panel[data-cz]').map(p => ({
+    img: p.querySelector('.art'),
+    cz: +p.getAttribute('data-cz'),
+  }));
+
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      el.classList.add('in');
+      io.unobserve(el);
+      if (el.classList.contains('chapter-card')) {
+        flash(.3); quake(); sfxThump();
+      } else if (el.classList.contains('panel')) {
+        if (el.hasAttribute('data-domain')) { flash(.22); sfxRiser(); }
+        else if (el.matches('.panel--sfx, .panel--impact')) { flash(.16, true); sfxHit(); }
+        else sfxWhoosh();
+      }
     });
   }, { threshold: .18, rootMargin: '0px 0px -6% 0px' });
   $$('[data-reveal]').forEach(el => io.observe(el));
 
-  /* ---------------- PARALLAX + PROGRESS ---------------- */
+  /* ---------------- CHAPTER RAIL + ACTIVE NAV ---------------- */
+  const SECTIONS = [['ch1','CH.1'],['ch2','CH.2'],['ch3','CH.3'],['ch4','CH.4'],['ch5','CH.5'],['ch6','CH.6'],['lab','LAB']];
+  const rail = $('#rail');
+  SECTIONS.forEach(([id, label]) => {
+    const b = document.createElement('button');
+    b.dataset.for = id;
+    b.setAttribute('aria-label', 'Jump to ' + label);
+    b.innerHTML = `<span>${label}</span>`;
+    b.addEventListener('click', () =>
+      document.getElementById(id)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }));
+    rail.appendChild(b);
+  });
+  const navLinks = new Map($$('.nav__links a').map(a => [a.getAttribute('href').slice(1), a]));
+  let activeSec = '';
+  function setActive(id) {
+    if (id === activeSec) return;
+    activeSec = id;
+    $$('#rail button').forEach(b => b.classList.toggle('on', b.dataset.for === id));
+    navLinks.forEach((a, key) => a.classList.toggle('on', key === id));
+    if (activeSec) sfxTick();
+  }
+  const secIO = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  SECTIONS.forEach(([id]) => { const s = document.getElementById(id); if (s) secIO.observe(s); });
+
+  /* ---------------- PARALLAX + CINEMATIC + PROGRESS ---------------- */
   const bar = $('#progressBar');
   const arts = $$('.panel .art');
+  const cover = $('#cover');
   let ticking = false;
 
   function onScroll() {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      ticking = false;
-      // progress
-      const h = document.documentElement;
-      const p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
-      bar.style.width = (p * 100).toFixed(2) + '%';
+      try {
+        const h = document.documentElement, vh = innerHeight, y = h.scrollTop;
 
-      // parallax
-      if (!reduced) {
-        const vh = innerHeight;
-        for (const img of arts) {
-          const r = img.parentElement.getBoundingClientRect();
-          if (r.bottom < -80 || r.top > vh + 80) continue;
-          const prog = (vh / 2 - (r.top + r.height / 2)) / vh; // -0.5..0.5ish
-          img.style.setProperty('--py', (prog * r.height * .09).toFixed(1) + 'px');
+        bar.style.width = (y / (h.scrollHeight - h.clientHeight || 1) * 100).toFixed(2) + '%';
+
+        // cover drifts away as you leave it
+        if (cover && y <= vh) {
+          cover.style.opacity = String(1 - clamp(y / (vh * .85), 0, 1));
+          cover.style.transform = `translateY(${(y * .16).toFixed(1)}px)`;
         }
+
+        if (!reduced) {
+          // cinematic zoom on flagged panels
+          for (const { img, cz } of cine) {
+            const r = img.parentElement.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > vh) continue;
+            const prog = clamp(1 - (r.top + r.height) / (vh + r.height), 0, 1);
+            img.style.setProperty('--czs', (1 + cz * prog).toFixed(3));
+          }
+          // art parallax
+          for (const img of arts) {
+            const r = img.parentElement.getBoundingClientRect();
+            if (r.bottom < -80 || r.top > vh + 80) continue;
+            const prog = (vh / 2 - (r.top + r.height / 2)) / vh;
+            img.style.setProperty('--py', (prog * r.height * .09).toFixed(1) + 'px');
+          }
+          // chapter kanji drifts against scroll
+          for (const k of kanjis) {
+            const r = k.parentElement.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > vh) continue;
+            const prog = (vh / 2 - (r.top + r.height / 2)) / vh;
+            k.style.transform = `translate(-50%,-52%) translateY(${(prog * -70).toFixed(1)}px)`;
+          }
+        }
+      } finally {
+        ticking = false; // never brick the scroll pipeline
       }
     });
   }
@@ -120,7 +295,7 @@
   function impact(panel, x, y) {
     if (reduced) return;
     panel.classList.remove('impact');
-    void panel.offsetWidth; // restart animation
+    void panel.offsetWidth;
     panel.classList.add('impact');
     flyWord(x, y, FLY[Math.random() * FLY.length | 0]);
     Math.random() < .5 ? sfxThump() : sfxZap();
@@ -132,6 +307,7 @@
   function openDomain() {
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
+    flash(.3, true);
     sfxDomain();
     clearTimeout(overlayTimer);
     overlayTimer = setTimeout(closeDomain, 3400);
@@ -145,7 +321,6 @@
   $('#domainBtn').addEventListener('click', openDomain);
   $$('.js-domain').forEach(b => b.addEventListener('click', openDomain));
 
-  // panels flagged data-domain trigger the cut-in; others just impact
   $$('.panel').forEach(panel => {
     panel.addEventListener('click', ev => {
       if (panel.hasAttribute('data-domain')) {
@@ -275,7 +450,6 @@
   $('#genBtn').addEventListener('click', () => { labSeed = (labSeed + 1 + Math.floor(Math.random() * 900)) % 10000; generatePanel(labSeed); });
   $('#genReset').addEventListener('click', () => { labSeed = Math.floor(Math.random() * 10000); generatePanel(labSeed); toast('NEW SEED ROLLED 🎲'); });
 
-  // first paint (static, no sound yet)
+  // first paint (static, no sound before gesture)
   generatePanel(labSeed);
-  soundOn = false; // ensure first generate stays silent before user opts in
 })();
