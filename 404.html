@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — PAGE NOT FOUND | DOMAIN EXPANSION</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/img/icon-192.png">
+<style>
+  :root{--pink:#ff2d78;--cyan:#39d5ff;--gold:#ffd166}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    min-height:100svh;display:grid;place-content:center;text-align:center;gap:14px;
+    background:
+      radial-gradient(900px 500px at 80% 0%, rgba(139,92,246,.25), transparent 60%),
+      radial-gradient(800px 500px at 10% 100%, rgba(255,45,120,.18), transparent 55%),
+      #0b0710;
+    color:#fdf6ff;font-family:'Kalam',cursive;padding:24px;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.6px);
+    background-size:14px 14px;
+  }
+  .num{
+    font-family:'Bangers',cursive;font-size:clamp(110px,28vw,240px);line-height:.9;
+    background:linear-gradient(100deg,var(--pink) 15%,#fff 50%,var(--cyan) 85%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(10px 10px 0 rgba(0,0,0,.85));transform:rotate(-3deg);
+  }
+  h1{font-family:'Bangers',cursive;font-size:clamp(22px,5vw,40px);letter-spacing:2px;color:var(--gold);text-shadow:4px 4px 0 rgba(0,0,0,.8)}
+  p{color:#b9a3d8;font-size:16px}
+  .kanji{font-weight:900;font-size:clamp(30px,7vw,54px);color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.22);letter-spacing:.3em;font-family:'Noto Sans JP',sans-serif}
+  a{
+    display:inline-block;margin-top:10px;text-decoration:none;color:#fff;
+    font-family:'Oswald',sans-serif,sans-serif;font-weight:700;letter-spacing:.14em;font-size:14px;
+    background:linear-gradient(135deg,var(--pink),#8b5cf6);border:2px solid #fff;
+    padding:13px 26px;box-shadow:5px 5px 0 #000;transition:transform .12s,box-shadow .12s;
+  }
+  a:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #000}
+  a:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #000}
+  .hint{font-size:13px;color:#7e66a3}
+</style>
+</head>
+<body>
+  <div class="num">404</div>
+  <span class="kanji">空白页</span>
+  <h1>THE CURSE ATE THIS PAGE</h1>
+  <p>This page was never finished… so the domain unmade it.</p>
+  <a href="/">⚡ RETURN TO THE STORY</a>
+  <p class="hint">Pro tip: finish your pages before the Static finds them.</p>
+</body>
+</html>
