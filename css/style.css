@@ -637,3 +637,12 @@ section.chapter{scroll-margin-top:76px}
   .intro,.flashfx,.cc-gogo{display:none}
   .panel .art{transform:scale(var(--zoom,1)) !important;transform-origin:var(--org,50% 50%)}
 }
+
+/* ============ SKIP LINK ============ */
+.skip{
+  position:fixed;top:10px;left:50%;transform:translate(-50%,-260%);z-index:600;
+  font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;letter-spacing:.14em;
+  color:#fff;background:var(--pink);border:2px solid #fff;padding:9px 18px;
+  box-shadow:4px 4px 0 #000;text-decoration:none;transition:transform .2s;
+}
+.skip:focus{transform:translate(-50%,0)}
