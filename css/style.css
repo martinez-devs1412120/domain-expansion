@@ -16,8 +16,7 @@
   --page-w:min(760px, 92vw);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
-@supports not (overflow-x:clip){html{overflow-x:hidden}}
+html{scroll-behavior:smooth}
 body{
   background:
     radial-gradient(1200px 600px at 80% -5%, rgba(139,92,246,.22), transparent 60%),
@@ -101,6 +100,7 @@ kbd{background:#241631;border:1px solid #4a2b66;border-bottom-width:3px;border-r
 
 /* ============ COVER ============ */
 .cover{position:relative;min-height:calc(100svh - var(--nav-h) - 26px);display:grid;place-items:center;padding:60px 5vw 90px;overflow:hidden;z-index:2}
+.cover__fx{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .cover__burst{
   position:absolute;inset:-40%;
   background:repeating-conic-gradient(from 0deg at 50% 50%,
@@ -577,7 +577,7 @@ main.quake{animation:mainQuake .42s cubic-bezier(.36,.07,.19,.97)}
 }
 
 /* ============ CHAPTER DECOR — kanji + gogogo ============ */
-.chapter-card{position:relative}
+.chapter-card{position:relative;overflow:hidden}
 .cc-kanji{
   position:absolute;left:50%;top:50%;z-index:0;
   font-family:'Noto Sans JP',sans-serif;font-weight:900;
@@ -587,7 +587,7 @@ main.quake{animation:mainQuake .42s cubic-bezier(.36,.07,.19,.97)}
 }
 .cc-num,.cc-title,.cc-sub{position:relative;z-index:1}
 .cc-gogo{
-  position:absolute;top:-16%;z-index:0;
+  position:absolute;top:-16%;z-index:0;white-space:nowrap;
   writing-mode:vertical-rl;font-family:'Noto Sans JP',sans-serif;font-weight:900;
   font-size:clamp(38px,6vw,78px);letter-spacing:.3em;
   color:rgba(255,255,255,.055);pointer-events:none;user-select:none;
