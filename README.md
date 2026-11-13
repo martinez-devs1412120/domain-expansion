@@ -1,4 +1,4 @@
-# ⚡ DOMAIN EXPANSION — Interactive Webtoon
+# DOMAIN EXPANSION — Interactive Webtoon
 
 A manga-style interactive website built from the PRATAO art drops: scroll like a
 webtoon, tap panels for impact SFX, and unleash a full-screen **DOMAIN EXPANSION**
@@ -9,7 +9,7 @@ cut-in. Includes a **Panel Lab** that procedurally generates brand-new panels
 
 ---
 
-## 🚀 Run it locally
+## Run it locally
 
 Just open `index.html` in a browser — or serve it (recommended so fonts/lazy-load behave):
 
@@ -23,7 +23,7 @@ Then visit <http://localhost:8080>.
 
 ---
 
-## 🌍 Make it LIVE (GitHub Pages — free demo URL)
+## Make it LIVE (GitHub Pages — free demo URL)
 
 ### Option A — in your browser (easiest)
 
@@ -56,7 +56,7 @@ If you have the GitHub CLI: `gh repo create domain-expansion --public --source=.
 
 ---
 
-## 🎮 What's inside
+## What's inside
 
 | Feature | Where |
 |---|---|
@@ -66,13 +66,13 @@ If you have the GitHub CLI: `gh repo create domain-expansion --public --source=.
 | Chapter entry: screen flash + quake + thump | each chapter card |
 | Tappable panels → shake, flash, flying SFX, sound | every panel |
 | Full-screen DOMAIN EXPANSION cut-in | `D` key, nav button, domain panels |
-| Procedural sound engine (WebAudio, no audio files), on by default after intro | 🔊 toggle / `S` key, persisted |
+| Procedural sound engine (WebAudio, no audio files), on by default after intro | toggle / `S` key, persisted |
 | Chapter rail (jump dots) + active nav sync | right edge, desktop |
 | Seeded **Panel Lab** generator (new panels + text, endlessly) | `#lab` |
 | Reading progress bar, to-be-continued stamp, custom scrollbar | everywhere |
 | Reduced-motion support + lazy images + mobile responsive | everywhere |
 
-## 🛠 Customizing the story
+## Customizing the story
 
 Every panel is plain HTML in `index.html`. Copy a `<figure class="panel">` block and:
 

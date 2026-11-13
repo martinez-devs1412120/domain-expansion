@@ -84,14 +84,14 @@
   const soundBtn = $('#soundBtn'), soundIcon = $('#soundIcon');
   function setSound(on, silent = false) {
     soundOn = on;
-    soundIcon.textContent = on ? '🔊' : '🔇';
+    soundIcon.textContent = on ? 'SOUND ON' : 'SOUND OFF';
     localStorage.setItem('de_sound', on ? '1' : '0');
-    if (on) { acGet().resume?.(); if (!silent) toast('SOUND ON ⚡'); sfxZap(); }
+    if (on) { acGet().resume?.(); if (!silent) toast('SOUND ON'); sfxZap(); }
   }
   soundBtn.addEventListener('click', () => setSound(!soundOn));
   // restore preference without creating a context (no gesture yet)
   soundOn = localStorage.getItem('de_sound') !== '0';
-  soundIcon.textContent = soundOn ? '🔊' : '🔇';
+  soundIcon.textContent = soundOn ? 'SOUND ON' : 'SOUND OFF';
 
   /* ---------------- SCREEN FLASH + QUAKE ---------------- */
   const flashEl = $('#flashfx'), mainEl = $('main');
@@ -469,7 +469,7 @@
 
   let labSeed = Math.floor(Math.random() * 10000);
   $('#genBtn').addEventListener('click', () => { labSeed = (labSeed + 1 + Math.floor(Math.random() * 900)) % 10000; generatePanel(labSeed); });
-  $('#genReset').addEventListener('click', () => { labSeed = Math.floor(Math.random() * 10000); generatePanel(labSeed); toast('NEW SEED ROLLED 🎲'); });
+  $('#genReset').addEventListener('click', () => { labSeed = Math.floor(Math.random() * 10000); generatePanel(labSeed); toast('NEW SEED ROLLED'); });
 
   // first paint (static, no sound before gesture)
   generatePanel(labSeed);
